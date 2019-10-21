@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://chancejs.com/chance.js"></script>
+    <style>
+
+        #i1{
+            height: 25px;
+            width: 338px;
+            display: inline-block;
+            overflow: hidden;
+            padding-left: 8px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow-y: auto;
+            font-family: sans-serif;
+            border-radius: 5px;
+            border: 1px solid grey;  
+        }
+
+        ul {
+            box-sizing: border-box;
+            list-style: none;
+            margin: 0;
+            padding: 0 5px;
+            width: 348px;
+            height: 200px; 
+            overflow: auto;  
+            font-family: sans-serif;
+            
+            letter-spacing: 2px;
+            line-height: 2;
+            border-radius: 5px;
+            border: 1px solid lightgray;
+        }
+
+        input:focus-within{
+            outline-color: black;
+            border: 1px solid black;
+        }
+
+        li:hover{
+            background-color:#5897FB;
+            color: white; 
+        }
+
+        .disp {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h3>Select Demo</h3>
+    <div id="d1">
+      <input type="text" onclick="opt()" id='i1' onkeyup="srchFun()">
+       <ul id='u1' class="disp"></ul>
+       <ul id='u2' class="disp"></ul>
+
+    </div>
+
+    <script>
+
+    var arr = [], i, k, mx=0, output = [], st=0;
+  
+    window.onload = function(){    
+        for (var i=0; i<200000; i++){
+        this.arr.push(chance.zip());
+        }
+    }
+    
+    function srchFun(){
+        var input = document.getElementById('i1').value;
+        var output = arr.filter(function(el){
+        return el.toLowerCase().indexOf(input.toLowerCase()) !== -1;
+        });
+      
+        var select = document.getElementById('u1');
+        select.innerHTML = null;
+        if(output !== null){
+        mx = output.length>100 ? 100 : output.length;
+        for ( k = 0; k<mx; k++){
+             var opt = document.createElement('li');
+                opt.value = k;
+                opt.id = 'opt'+ k;
+                opt.innerHTML = output[k];
+                select.appendChild(opt);
+                opt.addEventListener('click', function(e){
+                    document.getElementById('i1').value = output[e.currentTarget.value];
+                    document.getElementById('u1').classList.add('disp'); 
+                });
+        }}
+    }
+
+    document.getElementById("d1").addEventListener("wheel",function(){
+        if(mx < arr.length-1)
+            opt();
+    });
+
+    document.body.addEventListener('click', function(){
+        document.getElementById('u1').classList.add('disp');
+        var select = document.getElementById('u1');
+        select.innerHTML = null;
+        mx = 0;
+        st = 0;
+    }, true);  
+
+    window.onload = function(){    
+        for (var i=0; i<50000; i++){
+        this.arr.push(chance.zip());
+        }
+        arr.sort();
+    }; 
+
+    function opt(){
+        document.getElementById('u1').classList.remove('disp'); 
+        var select = document.getElementById('u1');
+        mx += arr.length>100 ? 100 : (arr.length-mx);
+        for ( i = st; i<mx; i++){
+            var opt = document.createElement('li');
+            opt.value = i;
+            opt.id = 'opt'+ i;
+            opt.innerHTML = arr[i];
+            select.appendChild(opt);
+            opt.addEventListener('click', function(e){
+            document.getElementById('i1').value = arr[e.currentTarget.value];
+            document.getElementById('u1').classList.add('disp'); 
+            });
+        }
+        st = mx;
+    } 
+    </script>
+
+</body>
+</html>
